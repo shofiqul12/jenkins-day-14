@@ -11,9 +11,10 @@ pipeline {
     }
 
     stages {
+
         stage('Clone Code') {
             steps {
-                echo 'Cloning code...'
+                echo 'Cloning code from Git...'
                 checkout scm
             }
         }
@@ -30,7 +31,7 @@ pipeline {
                 expression { return params.PUSH_IMAGE }
             }
             steps {
-                echo "Pushing image..."
+                echo "Pushing Docker image to Docker Hub: ${IMAGE_NAME}:${params.IMAGE_TAG}"
 
                 withCredentials([usernamePassword(
                     credentialsId: 'docker-cred',
