@@ -11,10 +11,9 @@ pipeline {
     }
 
     stages {
-
         stage('Clone Code') {
             steps {
-                echo 'Cloning code from Git...'
+                echo 'Cloning code...'
                 checkout scm
             }
         }
@@ -22,9 +21,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 echo "Building Docker image with tag: ${params.IMAGE_TAG}"
-                sh """
-                    docker build -t ${IMAGE_NAME}:${params.IMAGE_TAG} .
-                """
+                sh "docker build -t ${IMAGE_NAME}:${params.IMAGE_TAG} ."
             }
         }
 
