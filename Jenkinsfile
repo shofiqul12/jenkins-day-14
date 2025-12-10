@@ -19,7 +19,7 @@ pipeline {
         stage('build imgae') {
             steps {
                 echo "Building Docker image with tag: ${params.IMAGE_TAG}"
-                sh "docker build -t ${IMAGE_NAME}:${params.IMAGE_TAG} ."
+                //sh "docker build -t ${IMAGE_NAME}:${params.IMAGE_TAG} ."
             }
         }
         stage('push imgae') {
