@@ -1,33 +1,40 @@
+parameters {
+    string(name: 'ENV', defaultValue: 'dev', description: 'Environment')
+}
+```
+### Demo: parameters use if else conditions
+
+```sh
 pipeline {
     agent any
 
     parameters {
-        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker image tag')
-        booleanParam(name: 'PUSH_IMAGE', defaultValue: true, description: 'Push image to Docker Hub?')
-    }
-    environment {
-        IMAGE_NAME = "devopssteps/my-app-15"
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Select the environment to deploy')
     }
 
     stages {
-        stage('clone') {
+        stage('Print Selected Environment') {
             steps {
-                echo 'clone code............'
-                checkout scm
+                echo "Selected Environment: ${params.ENVIRONMENT}"
             }
         }
-        stage('build imgae') {
+
+        stage('Conditional Execution') {
             steps {
-                echo "Building Docker image with tag: ${params.IMAGE_TAG}"
-                //sh "docker build -t ${IMAGE_NAME}:${params.IMAGE_TAG} ."
-            }
-        }
-        stage('push imgae') {
-            when {
-                expression { return params.PUSH_IMAGE }
-            }
-            steps {
-                echo "Building Docker image with tag: ${params.IMAGE_TAG}"
+                script {
+                    if (params.ENVIRONMENT == 'dev') {
+                        echo "Deploying to Development environment"
+                        // Add dev deployment logic here
+                    } else if (params.ENVIRONMENT == 'staging') {
+                        echo "Deploying to Staging environment"
+                        // Add staging deployment logic here
+                    } else if (params.ENVIRONMENT == 'prod') {
+                        echo "Deploying to Production environment"
+                        // Add production deployment logic here
+                    } else {
+                        error("Invalid environment selected!")
+                    }
+                }
             }
         }
     }
