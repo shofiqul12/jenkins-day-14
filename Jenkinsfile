@@ -22,7 +22,9 @@ pipeline {
         stage('Build Image') {
             steps {
                 echo "Building Docker image with tag: ${params.IMAGE_TAG}"
-                sh "docker build -t ${IMAGE_NAME}:${params.IMAGE_TAG} ."
+                sh """
+                    docker build -t ${IMAGE_NAME}:${params.IMAGE_TAG} .
+                """
             }
         }
 
@@ -31,7 +33,7 @@ pipeline {
                 expression { return params.PUSH_IMAGE }
             }
             steps {
-                echo "Pushing Docker image to Docker Hub: ${IMAGE_NAME}:${params.IMAGE_TAG}"
+                echo "Pushing Docker image: ${IMAGE_NAME}:${params.IMAGE_TAG}"
 
                 withCredentials([usernamePassword(
                     credentialsId: 'docker-cred',
