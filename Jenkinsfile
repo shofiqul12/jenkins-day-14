@@ -11,7 +11,6 @@ pipeline {
     }
 
     stages {
-
         stage('Clone Code') {
             steps {
                 echo 'Cloning code from Git...'
@@ -31,13 +30,21 @@ pipeline {
                 expression { return params.PUSH_IMAGE }
             }
             steps {
-                echo "Pushing Docker image to Docker Hub: ${IMAGE_NAME}:${params.IMAGE_TAG}"
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'docker-cred',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )]) {
 
-                // login to docker hub
-                sh "echo ${env.DOCKER_PASSWORD} | docker login -u ${env.DOCKER_USERNAME} --password-stdin"
+                        echo "Pushing Docker image to Docker Hub: ${IMAGE_NAME}:${params.IMAGE_TAG}"
 
-                // push image
-                sh "docker push ${IMAGE_NAME}:${params.IMAGE_TAG}"
+                        sh """
+                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                        docker push ${IMAGE_NAME}:${params.IMAGE_TAG}
+                        """
+                    }
+                }
             }
         }
     }
