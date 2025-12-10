@@ -1,16 +1,18 @@
 pipeline {
     agent any
-
+    environment {
+        IMAGE_NAME = "devopssteps/my-app"
+    }
     stages {
-        stage('Hello') {
+        stage('build') {
             steps {
-                echo 'Hello World bdinsider'
+                echo "${IMAGE_NAME}"
             }
-        } 
+        }
         stage('test') {
             steps {
-                echo 'Hello World test-insider'
-            }
+                echo 'Hello World test222'
+            }    
         }
     }
 }
