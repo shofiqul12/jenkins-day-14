@@ -5,46 +5,29 @@ pipeline {
         string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker image tag')
         booleanParam(name: 'PUSH_IMAGE', defaultValue: true, description: 'Push image to Docker Hub?')
     }
-
     environment {
         IMAGE_NAME = "devopssteps/my-app-15"
     }
 
     stages {
-        stage('Clone Code') {
+        stage('clone') {
             steps {
-                echo 'Cloning code from Git...'
+                echo 'clone code............'
                 checkout scm
             }
         }
-
-        stage('Build Image') {
+        stage('build imgae') {
             steps {
                 echo "Building Docker image with tag: ${params.IMAGE_TAG}"
-                sh "docker build -t ${IMAGE_NAME}:${params.IMAGE_TAG} ."
+                //sh "docker build -t ${IMAGE_NAME}:${params.IMAGE_TAG} ."
             }
         }
-
-        stage('Push Image') {
+        stage('push imgae') {
             when {
                 expression { return params.PUSH_IMAGE }
             }
             steps {
-                script {
-                    withCredentials([usernamePassword(
-                        credentialsId: 'docker-cred',
-                        usernameVariable: 'DOCKER_USERNAME',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )]) {
-
-                        echo "Pushing Docker image to Docker Hub: ${IMAGE_NAME}:${params.IMAGE_TAG}"
-
-                        sh """
-                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                        docker push ${IMAGE_NAME}:${params.IMAGE_TAG}
-                        """
-                    }
-                }
+                echo "Building Docker image with tag: ${params.IMAGE_TAG}"
             }
         }
     }
