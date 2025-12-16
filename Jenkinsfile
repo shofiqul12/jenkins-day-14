@@ -1,9 +1,3 @@
-environment {
-        IMAGE_NAME = "devopssteps/my-app-15"
-    }
-```
-### Add environment variable in pipeline
-```sh
 pipeline {
     agent any
     environment {
@@ -18,7 +12,7 @@ pipeline {
         stage('test') {
             steps {
                 echo 'Hello World test222'
-            }    
+            }
         }
     }
 }
